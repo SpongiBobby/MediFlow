@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JpaBuddyIdeaProjectConfig" newRepositoryParent="org.springframework.data.repository.ListCrudRepository">
+    <option name="reLastEntityCreationPackage" value="sportello/src/main/java/it/mediflow/sportello/entity" />
+    <option name="reverseEngineeringLastDbConnectionId" value="87167d8b-3b0f-483d-a42e-14195226137e" />
+  </component>
+</project>

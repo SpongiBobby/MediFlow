@@ -1,0 +1,93 @@
+<div class="flex flex-col h-full bg-slate-100">
+  <div class="flex flex-col flex-1 min-h-0 p-6 gap-6">
+
+    <!-- HEADER: altezza fissa -->
+    <div class="flex flex-row text-3xl shrink-0">
+      <span class="uppercase font-semibold text-primary-500">Anagrafica Paziente</span>
+    </div>
+
+    <div class="flex flex-col h-full rounded-none p-2 shadow-sm border border-gray-200 bg-white">
+      <div class="flex-1 w-full">
+        <form [formGroup]="detailForm" class="grid grid-cols-3 gap-5">
+          <!-- NOME -->
+          <div class="input-group">
+            <label class="input-label">Nome</label>
+            <i class="pi pi-user"></i>
+            <input pInputText formControlName="nome" placeholder="Nome..." class="input-field"/>
+          </div>
+
+          <!-- COGNOME -->
+          <div class="input-group">
+            <label class="input-label">Cognome</label>
+            <i class="pi pi-user"></i>
+            <input pInputText formControlName="cognome" placeholder="Cognome..." class="input-field"/>
+          </div>
+
+          <!-- DATA DI NASCITA -->
+          <div class="input-group">
+            <label class="input-label">Data di nascita</label>
+            <i class="pi pi-calendar"></i>
+            <input pInputText formControlName="dataDiNascita" placeholder="Data di nascita..." class="input-field"/>
+          </div>
+
+          <!-- LUOGO DI NASCITA -->
+          <div class="input-group">
+            <label class="input-label">Luogo di nascita</label>
+            <i class="pi pi-map-marker"></i>
+            <input pInputText formControlName="luogoDiNascita" placeholder="Luogo di nascita..." class="input-field"/>
+          </div>
+
+          <!-- CODICE FISCALE -->
+          <div class="input-group">
+            <label class="input-label">Codice Fiscale</label>
+            <i class="pi pi-id-card"></i>
+            <input pInputText formControlName="codiceFiscale" placeholder="Codice Fiscale..." class="input-field"/>
+          </div>
+
+          <!-- INDIRIZZO DI RESIDENZA -->
+          <div class="input-group">
+            <label class="input-label">Indirizzo di residenza</label>
+            <i class="pi pi-map-marker"></i>
+            <input pInputText formControlName="indirizzoDiResidenza" placeholder="Indirizzo di residenza..." class="input-field"/>
+          </div>
+
+          <!-- TELEFONO -->
+          <div class="input-group">
+            <label class="input-label">Telefono</label>
+            <i class="pi pi-phone"></i>
+            <input pInputText formControlName="telefono" placeholder="Telefono..." class="input-field"/>
+          </div>
+
+          <!-- CELLULARE -->
+          <div class="input-group">
+            <label class="input-label">Cellulare</label>
+            <i class="pi pi-mobile"></i>
+            <input pInputText formControlName="cellulare" placeholder="Cellulare..." class="input-field"/>
+          </div>
+
+          <!-- EMAIL -->
+          <div class="input-group">
+            <label class="input-label">Email</label>
+            <i class="pi pi-mars"></i>
+            <input pInputText formControlName="email" placeholder="Email..." class="input-field"/>
+          </div>
+
+          <!-- ANNOTAZIONI -->
+          <div class="col-span-2">
+            <div class="input-group">
+              <label class="input-label">Annotazioni</label>
+              <textarea class="input-field" formControlName="annotazioni" rows="16" cols="30" pTextarea [autoResize]="false" fluid></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+      <!-- PULSANTI -->
+      <div class="flex justify-end gap-3 pt-4 border-t border-gray-50">
+        <button class="px-5 py-3 rounded-md text-sm font-bold bg-primary text-white hover:bg-primary-300 transition-all active:scale-95 shadow-lg shadow-gray-200 cursor-pointer flex items-center gap-2">
+          <i class="pi pi-save"></i>
+          Salva
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

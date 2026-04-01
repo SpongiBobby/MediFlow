@@ -1,0 +1,145 @@
+@import "tailwindcss";
+@import "tailwindcss-primeui";
+@import "primeicons/primeicons.css";
+
+@layer base {
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+}
+
+@layer theme {
+
+  .p-datatable {
+    @apply rounded-none shadow-sm border border-gray-200;
+  }
+
+  .p-datatable .p-datatable-wrapper {
+    @apply rounded-none;
+  }
+
+  .p-datatable .p-datatable-thead > tr > th {
+    @apply bg-slate-50 text-slate-400 text-[11px] font-bold uppercase tracking-widest
+    border-b border-slate-200 rounded-none;
+  }
+
+  .p-datatable .p-datatable-tbody > tr {
+    @apply bg-white border-b border-slate-100 rounded-none;
+  }
+
+  .p-datatable .p-datatable-tbody > tr:hover {
+    @apply bg-slate-50;
+  }
+
+  .p-datatable .p-datatable-tbody > tr > td {
+    @apply border-slate-100 text-slate-600;
+  }
+
+  .p-datatable .p-datatable-emptymessage > td {
+    @apply border-0 bg-white;
+  }
+
+  .p-paginator {
+    @apply rounded-none bg-slate-50 border-0 border-t border-slate-200 shadow-none;
+  }
+
+  .p-paginator .p-paginator-page,
+  .p-paginator .p-paginator-next,
+  .p-paginator .p-paginator-prev,
+  .p-paginator .p-paginator-first,
+  .p-paginator .p-paginator-last {
+    @apply rounded-none text-slate-500 hover:bg-slate-100;
+  }
+
+  .p-paginator .p-paginator-page.p-highlight {
+    @apply bg-slate-200 text-slate-700 rounded-none;
+  }
+
+  /******************************************************
+                          FIELDSET
+  ********************************************************/
+  .p-fieldset {
+    @apply rounded-none p-2 shadow-sm border border-gray-200 bg-white
+  }
+
+  .p-fieldset-legend,
+  .p-fieldset-toggle-icon {
+    @apply bg-transparent text-slate-400 font-bold ml-1 tracking-widest
+  }
+
+  /******************************************************
+                          INPUT
+  ********************************************************/
+
+  .input-group {
+    @apply relative flex flex-col gap-1.5 flex-1;
+  }
+
+  .input-group .p-select-clear-icon,
+  .input-group .p-select-dropdown {
+    @apply h-full flex items-center;
+  }
+
+  .input-label {
+    @apply text-gray-400 text-[10px] uppercase font-bold ml-1 tracking-widest pointer-events-none;
+  }
+
+  .input-field {
+    @apply w-full bg-gray-50 border-gray-200 text-gray-700 p-3 shadow-sm transition-all;
+  }
+
+  .input-field.p-select,
+  .input-field.p-multiselect {
+    @apply h-12 flex items-center py-0 px-3;
+  }
+
+  .input-field.p-select .p-select-label {
+    @apply flex items-center h-full py-0;
+  }
+
+  .input-group i {
+    @apply absolute left-4 top-11.5 -translate-y-1/2 text-gray-400 z-10 transition-colors;
+  }
+
+  .input-group:has(i) .input-field {
+    @apply pl-11;
+  }
+
+  textarea.input-field {
+    @apply resize-none;
+  }
+
+  .input-field:focus {
+    @apply border-gray-400 ring-1 ring-gray-400/20 outline-none;
+  }
+
+  .input-group:focus-within i {
+    @apply text-gray-900;
+  }
+
+  /******************************************************
+                          TOAST
+  ********************************************************/
+
+  .p-toast .p-toast-message.p-toast-message-error {
+    @apply bg-red-50 border-l-4 border-red-500 text-red-800;
+  }
+
+  .p-toast .p-toast-message.p-toast-message-error .p-toast-message-icon,
+  .p-toast .p-toast-message.p-toast-message-error .p-toast-close-button {
+    @apply text-red-500;
+  }
+
+  .p-toast .p-toast-message.p-toast-message-info {
+    @apply bg-blue-50 border-l-4 border-blue-500 text-blue-800;
+  }
+
+  .p-toast .p-toast-message.p-toast-message-warning {
+    @apply bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800;
+  }
+
+  .p-toast .p-toast-message.p-toast-message-success {
+    @apply bg-green-50 border-l-4 border-green-500 text-green-800;
+  }
+}
