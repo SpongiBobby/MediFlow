@@ -6,12 +6,13 @@ import it.mediflow.sportello.repository.SpecializzazioneRepository;
 import it.mediflow.sportello.service.ISpecializzazioneService;
 import it.mediflow.sportello.web.dto.SpecializzazioneDto;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SpecializzazioneService implements ISpecializzazioneService {
 
     private final SpecializzazioneRepository specializzazioneRepository;

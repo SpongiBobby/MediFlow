@@ -1,6 +1,7 @@
 package it.mediflow.sportello.service.impl;
 
 import it.mediflow.sportello.entity.Pazienti;
+import it.mediflow.sportello.exceptions.NotFoundException;
 import it.mediflow.sportello.mappers.IPazientiMapper;
 import it.mediflow.sportello.repository.PazientiRepository;
 import it.mediflow.sportello.repository.specification.SearchSpecification;
@@ -8,6 +9,7 @@ import it.mediflow.sportello.service.IPazientiService;
 import it.mediflow.sportello.web.dto.PazientiDto;
 import it.mediflow.sportello.web.dto.PazientiFilterDto;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class PazientiService implements IPazientiService {
 
@@ -35,7 +37,7 @@ public class PazientiService implements IPazientiService {
     @Override
     public PazientiDto dettaglioPaziente(Long id) {
         Optional<Pazienti> optPaziente = pazientiRepository.findById(id);
-        Pazienti pazienti = optPaziente.orElseThrow(() -> new RuntimeException("Paziente non trovato"));
+        Pazienti pazienti = optPaziente.orElseThrow(() -> new NotFoundException("Paziente non trovato"));
 
         return pazientiMapper.toDTO(pazienti);
     }
@@ -60,7 +62,7 @@ public class PazientiService implements IPazientiService {
     @Override
     @Transactional
     public void eliminaPaziente(Long id) {
-        if(!pazientiRepository.existsById(id)) throw new RuntimeException("Paziente non trovato");
+        if(!pazientiRepository.existsById(id)) throw new NotFoundException("Paziente non trovato");
 
         pazientiRepository.deleteById(id);
     }

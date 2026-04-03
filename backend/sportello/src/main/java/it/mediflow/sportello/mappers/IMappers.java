@@ -16,7 +16,7 @@ public interface IMappers<E, D> {
     D toDTO(E entity);
 
     /**
-     * Converte una lista di di DTO in una lista di Entity
+     * Converte una lista di DTO in una lista di Entity
      *
      * @param entities la lista di DTO da convertire
      * @return la lista di Entity convertita

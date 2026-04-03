@@ -1,29 +1,38 @@
 package it.mediflow.sportello.web;
 
-import it.mediflow.sportello.web.dto.ValidationErrorResponseDto;
+import it.mediflow.sportello.exceptions.MediFlowException;
+import it.mediflow.sportello.web.dto.ErrorResponseDto;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.stream.Collectors;
 
+@Slf4j
 @RestControllerAdvice
 public class GloabalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<List<ValidationErrorResponseDto>> handleValidationException(MethodArgumentNotValidException ex) {
-        List<ValidationErrorResponseDto> errorMessage = new ArrayList<>();
-        for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
-            ValidationErrorResponseDto error = new ValidationErrorResponseDto();
+    public ResponseEntity<ErrorResponseDto> handleValidationException(MethodArgumentNotValidException ex, HttpServletRequest request) {
+        String message = ex.getBindingResult().getFieldErrors().stream()
+                .map(fe -> fe.getField() + ": " + fe.getDefaultMessage())
+                .collect(Collectors.joining(", "));
 
-            error.setField(fieldError.getField());
-            error.setMessage(fieldError.getDefaultMessage());
+        log.warn("[400] Validazione fallita su {}: {}", request.getRequestURI(), message);
+        return ResponseEntity
+                .badRequest()
+                .body(ErrorResponseDto.of(HttpStatus.BAD_REQUEST, message, request));
+    }
 
-            errorMessage.add(error);
-        }
-        return ResponseEntity.badRequest().body(errorMessage);
+    @ExceptionHandler(MediFlowException.class)
+    public ResponseEntity<ErrorResponseDto> handleMediFlowError(MediFlowException ex, HttpServletRequest request) {
+        log.error("[{}] {}: {}", ex.getStatus(), request.getRequestURI(), ex.getMessage());
+        return ResponseEntity
+                .status(ex.getStatus())
+                .body(ErrorResponseDto.of(ex.getStatus(), ex.getMessage(), request));
     }
 }

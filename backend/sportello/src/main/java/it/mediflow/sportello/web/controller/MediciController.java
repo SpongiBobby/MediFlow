@@ -5,11 +5,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import it.mediflow.sportello.annotations.FiscalCode;
 import it.mediflow.sportello.service.IMediciService;
-import it.mediflow.sportello.service.impl.MediciService;
 import it.mediflow.sportello.web.dto.MediciDto;
 import it.mediflow.sportello.web.dto.MediciFilterDto;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,7 +29,7 @@ class MediciController {
 
     @Operation(
             summary = "Ricerca medici con filtri",
-            description = "Restituisce una lista paginata di medici filtrata in base ai criteri specificati nel corpo della richiesta."
+            description = "Restituisce una lista paginata di medici filtrata in base ai criteri specificati nel corpo della richiesta"
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Ricerca completata con successo"),
@@ -84,7 +82,7 @@ class MediciController {
             @ApiResponse(responseCode = "201", description = "Medico creato con successo"),
             @ApiResponse(responseCode = "400", description = "I dati del medico non superano la validazione o il corpo della richiesta è malformato"),
             @ApiResponse(responseCode = "409", description = "Esiste già un medico con gli stessi dati identificativi"),
-            @ApiResponse(responseCode = "500", description = "Errore interno del server durante il salvataggio")
+            @ApiResponse(responseCode = "500", description = "Errore interno del server durante il salvataggio del medico")
     })
     @PostMapping(value = "/", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<MediciDto> salvaMedico(@RequestBody @Valid MediciDto medico) {

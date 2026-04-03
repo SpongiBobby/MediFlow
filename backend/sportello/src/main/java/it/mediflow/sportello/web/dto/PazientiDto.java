@@ -40,9 +40,6 @@ public class PazientiDto implements Serializable {
     @NotBlank(message = "L'indirizzo di residenza è obbligatorio")
     private String indirizzoDiResidenza;
 
-    @NotNull(message = "La specializzazione è obbligatoria")
-    private Long idSpecializzazione;
-
     @PhoneNumber(message = "Il numero di telefono non è valido")
     private String telefono;
 

@@ -43,9 +43,6 @@ public class Pazienti implements Serializable {
     @Column(name = "indirizzo_di_residenza", nullable = false)
     private String indirizzoDiResidenza;
 
-    @Column(name = "id_specializzazione", nullable = false)
-    private Long idSpecializzazione;
-
     @Column(name = "telefono", length = 10)
     private String telefono;
 
