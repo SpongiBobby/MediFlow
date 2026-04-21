@@ -1,43 +1,52 @@
 <main class="flex min-h-screen bg-gray-300">
-  <aside class="w-20 lg:w-64 flex flex-col min-h-screen text-gray-300 border-r"
+  <aside class="flex min-h-screen w-20 flex-col border-r text-gray-300 lg:w-64"
          style="background: #1e2d4a; border-color: #2d4268;">
 
     <!-- HEADER -->
-    <div class="flex items-center p-4 justify-center border-b border-b-gray-700">
-      <span class="text-4xl text-white font-semibold">
-        MEDI<span class="text-primary">FLOW</span>
+    <div class="flex items-center justify-center border-b border-b-gray-700 px-3 py-4">
+      <span class="text-center text-2xl font-semibold leading-none text-white sm:text-3xl lg:text-4xl">
+        <span class="block lg:inline">MEDI<span class="text-primary">FLOW</span></span>
       </span>
     </div>
 
     <!-- BODY -->
-    <div class="flex-1 py-4 px-3 space-y-4">
+    <div class="flex-1 space-y-4 px-3 py-4">
       @for (item of items; track item.label) {
         <div class="space-y-1">
-          <div [routerLink]="item.items ? null : item.routerLink"
-               routerLinkActive="bg-gray-700 text-primary!"
-               [routerLinkActiveOptions]="{exact: true}"
-               [class.hover:bg-gray-800]="!item.items"
-               [class.hover:text-white]="!item.items"
-               [class.cursor-pointer]="!item.items"
-               [class.cursor-default]="item.items"
-               class="flex items-center justify-start gap-1 p-3 rounded-lg text-md font-semibold">
-            @if (item.icon) {
-              <i [class]="item.icon + ' text-xl'" class="w-6 text-center"></i>
-            }
-            <span class="inline text-primary uppercase">{{ item.label }}</span>
-          </div>
-
-          @if (item.items) {
-            <div class="flex ml-4 flex-col cursor-pointer">
-              @for (subItem of item.items; track subItem.label) {
-                <div [routerLink]="subItem.routerLink"
-                     [routerLinkActiveOptions]="{exact: true}"
-                     routerLinkActive="bg-gray-700 text-primary! font-semibold"
-                     class="p-0.5 mb-1 flex flex-row hover:text-white hover:bg-gray-800 rounded-md">
-                  <i [class]="subItem.icon + ' text-lg'" class="w-6 text-center content-center"></i>
-                  <span class="block p-2 text-sm">{{ subItem.label }}</span>
-                </div>
+          @if (!item.items) {
+            <a
+              [routerLink]="item.routerLink"
+              routerLinkActive="bg-gray-700 !text-primary"
+              [routerLinkActiveOptions]="{ exact: false }"
+              class="flex cursor-pointer items-center justify-start gap-2 rounded-lg p-3 text-md font-semibold transition-colors hover:bg-gray-800 hover:text-white"
+            >
+              @if (item.icon) {
+                <i [class]="item.icon + ' text-xl'" class="w-6 text-center"></i>
               }
+              <span class="hidden uppercase lg:inline">{{ item.label }}</span>
+            </a>
+          } @else {
+            <div class="space-y-1 rounded-lg">
+              <div class="flex cursor-default items-center justify-start gap-2 px-3 py-3 text-md font-semibold text-primary">
+                @if (item.icon) {
+                  <i [class]="item.icon + ' text-xl'" class="w-6 text-center"></i>
+                }
+                <span class="hidden uppercase lg:inline">{{ item.label }}</span>
+              </div>
+
+              <div class="flex flex-col gap-1 lg:ml-4">
+                @for (subItem of item.items; track subItem.label) {
+                  <a
+                    [routerLink]="subItem.routerLink"
+                    routerLinkActive="bg-gray-700 !text-primary font-semibold"
+                    [routerLinkActiveOptions]="{ exact: false }"
+                    class="flex cursor-pointer flex-row items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors hover:bg-gray-800 hover:text-white"
+                  >
+                    <i [class]="subItem.icon + ' text-lg'" class="w-6 text-center"></i>
+                    <span class="hidden lg:inline">{{ subItem.label }}</span>
+                  </a>
+                }
+              </div>
             </div>
           }
         </div>
@@ -45,9 +54,7 @@
     </div>
   </aside>
 
-  <div class="flex-1 flex flex-col min-w-0">
-    <div class="flex-1 relative">
-      <router-outlet/>
-    </div>
+  <div class="min-w-0 flex-1 flex-col">
+    <router-outlet />
   </div>
 </main>

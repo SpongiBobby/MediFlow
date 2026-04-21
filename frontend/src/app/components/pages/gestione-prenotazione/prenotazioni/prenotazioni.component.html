@@ -1,14 +1,13 @@
-<div class="flex flex-col h-full bg-slate-100">
+<div class="flex flex-col h-dvh bg-slate-100">
   <p-confirmpopup/>
   <p-toast/>
-  <div class="flex flex-1 flex-col gap-6 p-6 min-h-0">
+  <div class="flex flex-1 flex-col gap-6 p-4 min-h-0">
 
-    <div class="flex flex-row text-3xl">
-      <span class="uppercase font-semibold text-primary-500">Gestione Prenotazione</span>
+    <div class="flex flex-row shrink-0">
+      <span class="page-title">Gestione Prenotazione</span>
     </div>
 
-
-    <div class="flex h-full flex-col gap-1.5 w-full min-h-0">
+    <div class="flex flex-col h-full gap-4 w-full min-h-0">
       <!-- FILTRI DI RICERCA -->
       <p-fieldset
         [toggleable]="true"
@@ -20,19 +19,24 @@
             <div class="flex flex-col md:flex-row gap-4 w-full">
 
               <div class="input-group">
-                <label class="input-label">Codice Fiscale</label>
+                <label class="input-label">Codice Fiscale Paziente</label>
                 <i class="pi pi-id-card"></i>
-                <input pInputText formControlName="codiceFiscale" placeholder="Codice Fiscale..." class="input-field"/>
+                <p-auto-complete formControlName="codiceFiscale"
+                                 placeholder="Codice Fiscale..."
+                                 class="w-full"
+                                 inputStyleClass="input-field"
+                                 [suggestions]="suggestions()"
+                                 (completeMethod)="onSearch($event)" />
               </div>
 
               <div class="input-group">
-                <label class="input-label">Nome</label>
+                <label class="input-label">Nome Paziente</label>
                 <i class="pi pi-user"></i>
                 <input pInputText formControlName="nome" placeholder="Nome..." class="input-field"/>
               </div>
 
               <div class="input-group">
-                <label class="input-label">Cognome</label>
+                <label class="input-label">Cognome Paziente</label>
                 <i class="pi pi-user"></i>
                 <input pInputText formControlName="cognome" placeholder="Cognome..." class="input-field"/>
               </div>
@@ -42,28 +46,27 @@
               <div class="input-group">
                 <label class="input-label">Data Prenotazione</label>
                 <i class="pi pi-calendar"></i>
-                <p-datepicker
+                <p-datePicker
                   formControlName="dataPrenotazione"
                   dateFormat="dd/mm/yy"
                   placeholder="Seleziona data"
                   [showIcon]="false"
                   appendTo="body"
-                  inputStyleClass="input-field"></p-datepicker>
+                  inputStyleClass="input-field"></p-datePicker>
               </div>
               <div class="input-group">
-                <label class="input-label">Stato</label>
+                <label class="input-label">Stato Prenotazione</label>
                 <i class="pi pi-tag"></i>
-                <input pInputText formControlName="stato" placeholder="Stato..." class="input-field"/>
+                <p-select formControlName="stato" placeholder="Stato..." class="input-field" [options]="stati()"/>
               </div>
             </div>
           </form>
 
-          <!-- FOOTER -->
           <div class="flex justify-end gap-3 pt-4 border-t border-gray-50">
-            <button (click)="reset()" class="px-6 py-3 rounded-md text-sm font-bold text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-all cursor-pointer">
+            <button (click)="reset()" class="btn-secondary">
               Reset
             </button>
-            <button (click)="search()" class="px-5 py-3 rounded-md text-sm font-bold bg-primary text-white hover:bg-primary-300 transition-all active:scale-95 shadow-lg shadow-gray-200 cursor-pointer flex items-center gap-2">
+            <button (click)="search()" class="btn-primary">
               <i class="pi pi-search"></i>
               Ricerca
             </button>
@@ -72,57 +75,57 @@
       </p-fieldset>
 
       <!-- AGGIUNGI -->
-      <div class="flex justify-end pt-4 border-t border-gray-50">
-        <button (click)="nuovaPrenotazione()" class="px-5 py-3 rounded-md text-sm font-bold bg-primary text-white hover:bg-primary-300 transition-all active:scale-95 shadow-lg shadow-gray-200 cursor-pointer flex items-center gap-2">
+      <div class="flex justify-end pt-2">
+        <button (click)="nuovaPrenotazione()" class="btn-primary">
           <i class="pi pi-plus"></i>
           Aggiungi
         </button>
       </div>
 
       <!-- TABELLA -->
-      <label class="text-slate-400 uppercase font-bold ml-1 tracking-widest text-[11px]">Risultati</label>
-      <div class="flex-1 h-full min-h-0 flex flex-col border border-slate-200 overflow-hidden">
+      <label class="section-label">Risultati</label>
+      <div class="flex-1 h-full min-h-0 flex flex-col overflow-hidden page-card">
         <p-table
           [value]="prenotazioni()"
           [lazy]="true"
           [first]="first()"
+          (onLazyLoad)="onLazyLoadHandler($event)"
           [paginator]="true"
           [scrollable]="true"
           [tableStyleClass]="'h-full'"
-          (onLazyLoad)="onLazyLoadHandler($event)"
           [totalRecords]="totalRecords()"
           [loading]="isLoading()"
-          [rows]="15"
+          [rows]="5"
           scrollHeight="flex">
           <ng-template pTemplate="header">
             <tr>
               <th>Codice Fiscale</th>
-              <th>Nominativo</th>
+              <th>Paziente</th>
               <th>Data Prenotazione</th>
               <th>Medico</th>
               <th>Stato</th>
               <th class="text-center">Azioni</th>
             </tr>
           </ng-template>
-          <ng-template #body let-prenotazione>
+          <ng-template pTemplate="body" let-prenotazione>
             <tr>
               <td class="p-2.5 text-sm font-medium text-slate-800">{{ prenotazione.paziente.codiceFiscale }}</td>
               <td class="p-2.5 font-mono text-xs text-slate-500">{{ prenotazione.paziente.nome + ' ' + prenotazione.paziente.cognome}}</td>
               <td class="p-2.5 font-mono text-xs text-slate-500">{{ prenotazione.dataPrenotazione | date:'dd/MM/yyyy' }}</td>
               <td class="p-2.5 font-mono text-xs text-slate-500">{{ prenotazione.medico.nome + ' ' + prenotazione.medico.cognome }}</td>
               <td class="p-2.5 font-mono text-xs">
-                @if (prenotazione.stato == 0) {
-                  <p-tag severity="success" value="CONFERMATO"/>
-                } @else if (prenotazione.stato == 1) {
-                  <p-tag severity="danger" value="CANCELLATO" />
+                @if (prenotazione.stato === "CONFERMATO") {
+                  <p-tag severity="success" value="{{prenotazione.stato}}"/>
+                } @else if (prenotazione.stato === "ANNULLATO") {
+                  <p-tag severity="danger" value="{{prenotazione.stato}}" />
                 }
               </td>
               <td class="text-center">
-                <button (click)="modificaPrenotazione(prenotazione.id)" pTooltip="Apri dettaglio" class="p-2 cursor-pointer text-slate-300 hover:text-slate-700 hover:bg-slate-100 rounded transition-colors duration-150">
+                <button (click)="modificaPrenotazione(prenotazione.id)" pTooltip="Apri dettaglio" class="btn-icon">
                   <i class="pi pi-ellipsis-v"></i>
                 </button>
-                @if (prenotazione.stato == 0) {
-                  <button (click)="eliminaPrenotazione($event, prenotazione.id)" pTooltip="Elimina" class="p-2 cursor-pointer text-slate-300 hover:text-slate-700 hover:bg-slate-100 rounded transition-colors duration-150">
+                @if (prenotazione.stato === "CONFERMATO") {
+                  <button (click)="eliminaPrenotazione($event, prenotazione.id)" pTooltip="Elimina" class="btn-icon">
                     <i class="pi pi-trash"></i>
                   </button>
                 }
@@ -131,7 +134,7 @@
           </ng-template>
           <ng-template pTemplate="emptymessage">
             <tr>
-              <td colspan="5" class="text-center py-12!">
+              <td colspan="6" class="text-center py-12!">
                 <div class="flex flex-col items-center gap-2">
                   <i class="pi pi-search text-slate-300 text-3xl"></i>
                   <span class="text-slate-400 text-sm">Nessuna prenotazione trovata</span>

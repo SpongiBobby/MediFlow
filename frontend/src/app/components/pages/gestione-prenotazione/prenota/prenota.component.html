@@ -1,13 +1,251 @@
-<div class="flex flex-col h-full bg-slate-100">
-  <div class="flex flex-col flex-1 p-6 gap-6 min-h-0">
+<div class="flex flex-col h-dvh bg-slate-100">
+  <p-toast/>
+  <div class="flex flex-col flex-1 min-h-0 p-6 gap-6">
 
-    <!-- HEADER: altezza fissa -->
     <div class="flex flex-row text-3xl shrink-0">
       <span class="uppercase font-semibold text-primary-500">Prenota</span>
     </div>
 
-    <div class="flex flex-row h-full rounded-none p-2 shadow-sm border border-gray-200 bg-white">
+    <div class="flex flex-col h-full rounded-none p-2 shadow-sm border border-gray-200 bg-white min-h-0">
+      <div class="flex-1 w-full overflow-y-auto pr-1">
+        <form [formGroup]="prenotazioneForm" class="grid grid-cols-1 xl:grid-cols-3 gap-5">
+          <div class="xl:col-span-2 flex flex-col gap-5">
+            <div class="border border-slate-200 bg-white p-4">
+              <div class="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
+                <i class="pi pi-user text-primary-500"></i>
+                <span class="section-label">Dati paziente</span>
+              </div>
 
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="md:col-span-2 input-group" [class.input-group-invalid]="hasError('codiceFiscale', 'required')">
+                  <label class="input-label">Codice Fiscale</label>
+                  <i class="pi pi-id-card"></i>
+                  <p-autoComplete
+                    formControlName="codiceFiscale"
+                    placeholder="Cerca per codice fiscale..."
+                    class="w-full"
+                    inputStyleClass="input-field"
+                    [suggestions]="pazientiSuggestions()"
+                    [forceSelection]="false"
+                    [completeOnFocus]="false"
+                    [dropdown]="false"
+                    [showClear]="true"
+                    (completeMethod)="onSearchPaziente($event)"
+                    (onSelect)="onSelectPaziente($event.value)">
+                  </p-autoComplete>
+                  @if (hasError('codiceFiscale', 'required')) {
+                    <small class="input-error">Il codice fiscale è obbligatorio.</small>
+                  }
+                </div>
+
+                <div class="input-group" [class.input-group-invalid]="hasError('nome', 'required')">
+                  <label class="input-label">Nome</label>
+                  <i class="pi pi-user"></i>
+                  <input pInputText formControlName="nome" placeholder="Nome..." class="input-field"/>
+                  @if (hasError('nome', 'required')) {
+                    <small class="input-error">Il nome è obbligatorio.</small>
+                  }
+                </div>
+
+                <div class="input-group" [class.input-group-invalid]="hasError('cognome', 'required')">
+                  <label class="input-label">Cognome</label>
+                  <i class="pi pi-user"></i>
+                  <input pInputText formControlName="cognome" placeholder="Cognome..." class="input-field"/>
+                  @if (hasError('cognome', 'required')) {
+                    <small class="input-error">Il cognome è obbligatorio.</small>
+                  }
+                </div>
+
+                <div class="input-group" [class.input-group-invalid]="hasError('dataDiNascita', 'required')">
+                  <label class="input-label">Data di nascita</label>
+                  <i class="pi pi-calendar"></i>
+                  <p-date-picker
+                    formControlName="dataDiNascita"
+                    dateFormat="dd/mm/yy"
+                    placeholder="Seleziona data"
+                    [showIcon]="false"
+                    appendTo="body"
+                    inputStyleClass="input-field" />
+                  @if (hasError('dataDiNascita', 'required')) {
+                    <small class="input-error">La data di nascita è obbligatoria.</small>
+                  }
+                </div>
+
+                <div class="input-group" [class.input-group-invalid]="hasError('luogoDiNascita', 'required')">
+                  <label class="input-label">Luogo di nascita</label>
+                  <i class="pi pi-map-marker"></i>
+                  <input pInputText formControlName="luogoDiNascita" placeholder="Luogo di nascita..." class="input-field"/>
+                  @if (hasError('luogoDiNascita', 'required')) {
+                    <small class="input-error">Il luogo di nascita è obbligatorio.</small>
+                  }
+                </div>
+
+                <div class="input-group" [class.input-group-invalid]="hasError('indirizzoDiResidenza', 'required')">
+                  <label class="input-label">Indirizzo di residenza</label>
+                  <i class="pi pi-home"></i>
+                  <input pInputText formControlName="indirizzoDiResidenza" placeholder="Indirizzo di residenza..." class="input-field"/>
+                  @if (hasError('indirizzoDiResidenza', 'required')) {
+                    <small class="input-error">L'indirizzo di residenza è obbligatorio.</small>
+                  }
+                </div>
+
+                <div class="input-group" [class.input-group-invalid]="hasError('cellulare', 'required') || hasError('cellulare', 'pattern')">
+                  <label class="input-label">Cellulare</label>
+                  <i class="pi pi-mobile"></i>
+                  <input pInputText formControlName="cellulare" placeholder="Cellulare..." class="input-field"/>
+                  @if (hasError('cellulare', 'required')) {
+                    <small class="input-error">Il cellulare è obbligatorio.</small>
+                  }
+                  @if (hasError('cellulare', 'pattern')) {
+                    <small class="input-error">Il formato del cellulare non è valido.</small>
+                  }
+                </div>
+
+                <div class="input-group" [class.input-group-invalid]="hasError('email', 'required') || hasError('email', 'email')">
+                  <label class="input-label">Email</label>
+                  <i class="pi pi-envelope"></i>
+                  <input pInputText formControlName="email" placeholder="Email..." class="input-field"/>
+                  @if (hasError('email', 'required')) {
+                    <small class="input-error">L'email è obbligatoria.</small>
+                  }
+                  @if (hasError('email', 'email')) {
+                    <small class="input-error">Inserisci un indirizzo email valido.</small>
+                  }
+                </div>
+              </div>
+
+              @if (pazienteNonTrovato()) {
+                <div class="mt-4">
+                  <div class="border border-amber-200 bg-amber-50 px-4 py-3 text-amber-700 text-sm flex items-start gap-2">
+                    <i class="pi pi-exclamation-triangle mt-0.5"></i>
+                    <span>
+                    Nessun paziente trovato. Puoi inserire manualmente i dati e verrà registrato al momento della prenotazione.
+                  </span>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <div class="border border-slate-200 bg-white p-4">
+              <div class="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
+                <i class="pi pi-calendar-plus text-primary-500"></i>
+                <span class="section-label">Dati prenotazione</span>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="input-group" [class.input-group-invalid]="hasError('medico', 'required')">
+                  <label class="input-label">Medico</label>
+                  <i class="pi pi-briefcase"></i>
+                  <p-autoComplete
+                    formControlName="medico"
+                    placeholder="Medico..."
+                    class="w-full"
+                    inputStyleClass="input-field"
+                    [suggestions]="mediciSuggestions()"
+                    [forceSelection]="false"
+                    [completeOnFocus]="false"
+                    [showClear]="true"
+                    [optionLabel]="getMedicoLabel"
+                    (completeMethod)="onSearchMedici($event)"
+                    (onSelect)="onSelectMedico($event.value)">
+                    <ng-template pTemplate="item" let-medico>
+                      <div class="flex flex-col py-1">
+                        <span class="font-semibold text-slate-800">{{ medico.codiceFiscale }}</span>
+                        <span class="text-sm text-slate-500">
+                          {{ medico.nome || 'Nome non disponibile' }} {{ medico.cognome || '' }} - {{ medico.specializzazione.descrizione }}
+                        </span>
+                      </div>
+                    </ng-template>
+                  </p-autoComplete>
+                  @if (hasError('medico', 'required')) {
+                    <small class="input-error">Il medico è obbligatorio.</small>
+                  }
+                </div>
+
+                <div class="input-group" [class.input-group-invalid]="hasError('dataVisita', 'required')">
+                  <label class="input-label">Data visita</label>
+                  <i class="pi pi-calendar"></i>
+                  <p-date-picker
+                    formControlName="dataVisita"
+                    dateFormat="dd/mm/yy"
+                    placeholder="Data prenotazione"
+                    [showIcon]="false"
+                    appendTo="body"
+                    inputStyleClass="input-field" />
+                  @if (hasError('dataVisita', 'required')) {
+                    <small class="input-error">La data visita è obbligatoria.</small>
+                  }
+                </div>
+                <div class="input-group">
+                  <label class="input-label">Data prenotazione</label>
+                  <i class="pi pi-calendar"></i>
+                  <p-date-picker
+                    formControlName="dataPrenotazione"
+                    dateFormat="dd/mm/yy"
+                    placeholder="Data prenotazione"
+                    [showIcon]="false"
+                    appendTo="body"
+                    inputStyleClass="input-field" />
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="xl:col-span-1 flex flex-col gap-5">
+            <div class="border border-slate-200 bg-white p-4 h-full flex flex-col">
+              <div class="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
+                <i class="pi pi-file-edit text-primary-500"></i>
+                <span class="section-label">Annotazioni</span>
+              </div>
+
+              <div class="input-group flex-1">
+                <label class="input-label">Note</label>
+                <textarea
+                  class="input-field flex-1 min-h-80"
+                  formControlName="annotazioni"
+                  rows="10"
+                  cols="30"
+                  pTextarea
+                  [autoResize]="false"
+                  fluid></textarea>
+              </div>
+
+              <div class="mt-4 border border-slate-200 bg-slate-50 p-4">
+                <div class="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-3">Riepilogo rapido</div>
+                <div class="flex flex-col gap-2 text-sm">
+                  <div class="flex justify-between gap-3">
+                    <span class="text-slate-400">Paziente</span>
+                    <span class="font-medium text-slate-700">
+                      {{ prenotazioneForm.get('nome')?.value || '-' }} {{ prenotazioneForm.get('cognome')?.value || '' }}
+                    </span>
+                  </div>
+                  <div class="flex justify-between gap-3">
+                    <span class="text-slate-400">CF</span>
+                    <span class="font-medium text-slate-700">
+                      {{ prenotazioneForm.get('codiceFiscale')?.value || '-' }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="flex justify-end gap-3 pt-4 border-t border-gray-50">
+        @if (!this.disabledForm()) {
+          <button (click)="reset()" class="btn-secondary">
+            <i class="pi pi-times"></i>
+            Reset
+          </button>
+          <button (click)="salva()" class="btn-primary">
+            <i class="pi pi-save"></i>
+            Salva
+          </button>
+        }
+      </div>
     </div>
   </div>
 </div>

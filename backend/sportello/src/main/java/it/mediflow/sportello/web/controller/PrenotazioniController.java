@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import it.mediflow.sportello.service.IPrenotazioniService;
+import it.mediflow.sportello.web.dto.PageResonse;
 import it.mediflow.sportello.web.dto.PrenotazioniDto;
 import it.mediflow.sportello.web.dto.PrenotazioniFilterDto;
 import jakarta.validation.Valid;
@@ -18,6 +19,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/prenotazioni")
 class PrenotazioniController {
 
@@ -34,8 +36,9 @@ class PrenotazioniController {
             @ApiResponse(responseCode = "500", description = "Errore interno del server durante l'elaborazione della ricerca")
     })
     @PostMapping(value = "/search", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<PrenotazioniDto>> filtro(Pageable pageable, @RequestBody PrenotazioniFilterDto filter) {
-        return ResponseEntity.ok(prenotazioniService.ricercaPrenotazioni(filter, pageable));
+    public ResponseEntity<PageResonse<PrenotazioniDto>> filtro(Pageable pageable, @RequestBody PrenotazioniFilterDto filter) {
+        Page<PrenotazioniDto> result = prenotazioniService.ricercaPrenotazioni(filter, pageable);
+        return ResponseEntity.ok(PageResonse.of(result));
     }
 
 

@@ -8,5 +8,6 @@ import org.springframework.data.repository.ListCrudRepository;
 import java.util.List;
 
 public interface MediciRepository extends ListCrudRepository<Medici, Long>, JpaSpecificationExecutor<Medici> {
-    List<Medici> findDistinctByCodiceFiscaleLikeIgnoreCase(String codiceFiscale, Pageable pageable);
+    List<Medici> findDistinctByCodiceFiscaleContainsIgnoreCase(String codiceFiscale, Pageable pageable);
+
 }

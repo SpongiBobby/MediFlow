@@ -1,9 +1,11 @@
 package it.mediflow.sportello.service.impl;
 
 import it.mediflow.sportello.entity.Pazienti;
+import it.mediflow.sportello.exceptions.ConflictException;
 import it.mediflow.sportello.exceptions.NotFoundException;
 import it.mediflow.sportello.mappers.IPazientiMapper;
 import it.mediflow.sportello.repository.PazientiRepository;
+import it.mediflow.sportello.repository.PrenotazioniRepository;
 import it.mediflow.sportello.repository.specification.SearchSpecification;
 import it.mediflow.sportello.service.IPazientiService;
 import it.mediflow.sportello.web.dto.PazientiDto;
@@ -25,6 +27,7 @@ import java.util.Optional;
 public class PazientiService implements IPazientiService {
 
     private final PazientiRepository pazientiRepository;
+    private final PrenotazioniRepository prenotazioniRepository;
     private final IPazientiMapper pazientiMapper;
 
     @Override
@@ -43,9 +46,17 @@ public class PazientiService implements IPazientiService {
     }
 
     @Override
+    public PazientiDto dettaglioPazientePerCodiceFiscale(String cf) {
+        Optional<Pazienti> optPaziente = pazientiRepository.findByCodiceFiscaleContainsIgnoreCase(cf);
+        Pazienti pazienti = optPaziente.orElseThrow(() -> new NotFoundException("Paziente non trovato"));
+
+        return pazientiMapper.toDTO(pazienti);
+    }
+
+    @Override
     public List<String> ricercaPerCodiceFiscale(String cf) {
         Pageable page = PageRequest.of(0, 10);
-        List<Pazienti> pazienti = pazientiRepository.findDistinctByCodiceFiscaleLikeIgnoreCase(cf, page);
+        List<Pazienti> pazienti = pazientiRepository.findDistinctByCodiceFiscaleContainsIgnoreCase(cf, page);
 
         return pazienti.stream().map(Pazienti::getCodiceFiscale).toList();
     }
@@ -62,7 +73,11 @@ public class PazientiService implements IPazientiService {
     @Override
     @Transactional
     public void eliminaPaziente(Long id) {
-        if(!pazientiRepository.existsById(id)) throw new NotFoundException("Paziente non trovato");
+        if(!pazientiRepository.existsById(id))
+            throw new NotFoundException("Paziente non trovato");
+
+        if(prenotazioniRepository.existsByPaziente_Id(id))
+            throw new ConflictException("Impossibile eliminare un paziente con prenotazioni");
 
         pazientiRepository.deleteById(id);
     }

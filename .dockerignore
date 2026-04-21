@@ -10,7 +10,12 @@
 *.iws
 *.ipr
 .editorconfig
+*.sublime-*
+.project
+.classpath
+.settings/
 
+# --- System Files ---
 .DS_Store
 Thumbs.db
 
@@ -20,19 +25,35 @@ Thumbs.db
 .mvn/
 mvnw
 mvnw.cmd
-*/.log
+*.log
+logs/
 
 # --- Node / Angular (Frontend) ---
 **/node_modules/
 **/dist/
 **/.angular/
-**/.vscode/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .postcssrc.json
+package-lock.json
 
 # --- Docker & Environment ---
-docker-compose*.yml
-Dockerfile*
+docker-compose-locale.yml
+docker-compose*.local.yml
+.env
+.env.local
+.env.*.local
 
+# --- Database & Local Data ---
+**/locale/db/
+**/db/data/
+
+# --- Documentation ---
+README.md
+*.md
+
+# --- Test & Coverage ---
+**/coverage/
+**/.nyc_output/
+**/test-results/

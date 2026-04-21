@@ -3,6 +3,7 @@ package it.mediflow.sportello.web.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import it.mediflow.sportello.entity.Prenotazioni;
 import it.mediflow.sportello.enums.StatoPrenotazione;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,14 +23,17 @@ public class PrenotazioniDto implements Serializable {
 
     private LocalDate dataPrenotazione;
 
-    @NotNull(message = "")
+    private LocalDate dataVisita;
+
     private StatoPrenotazione stato;
 
     @NotNull(message = "Paziente Obbligatorio")
-    private PazientiDto idPaziente;
+    @Valid
+    private PazientiDto paziente;
 
     @NotNull(message = "Medico Obbligatorio")
-    private MediciDto idMedico;
+    @Valid
+    private MediciDto medico;
 
     private String annotazioni;
 }

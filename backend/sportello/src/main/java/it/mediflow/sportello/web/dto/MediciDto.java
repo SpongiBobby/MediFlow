@@ -28,7 +28,7 @@ public class MediciDto implements Serializable {
     private String cognome;
     
     @NotNull(message = "La data di nascita è obbligatoria")
-    @FutureOrPresent(message = "L'inserimento di una data odierna o futura non è consentita per la data di nascita")
+    @Past(message = "L'inserimento di una data odierna o futura non è consentita per la data di nascita")
     private LocalDate dataDiNascita;
     
     @NotBlank(message = "Il luogo di nascita è obbligatorio")

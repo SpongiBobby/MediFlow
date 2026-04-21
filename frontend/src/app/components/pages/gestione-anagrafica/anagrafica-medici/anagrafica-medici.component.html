@@ -1,11 +1,13 @@
-<div class="flex flex-col h-full bg-slate-100">
-  <div class="flex flex-1 flex-col gap-6 p-6 min-h-">
+<div class="flex flex-col h-dvh bg-slate-100">
+  <p-confirmpopup/>
+  <p-toast/>
+  <div class="flex flex-1 flex-col gap-6 p-4 min-h-0">
 
-    <div class="flex flex-row text-3xl">
-      <span class="uppercase font-semibold text-primary-500">Anagrafica Medici</span>
+    <div class="flex flex-row shrink-0">
+      <span class="page-title">Anagrafica Medici</span>
     </div>
 
-    <div class="flex h-full flex-col gap-1.5 w-full mb-4 min-h-0">
+    <div class="flex h-full flex-col gap-4 w-full min-h-0">
       <!-- FILTRI DI RICERCA -->
       <p-fieldset
         [toggleable]="true"
@@ -13,25 +15,30 @@
         legend="Filtri"
       >
         <div class="flex flex-col gap-2">
-          <form class="flex flex-col gap-3">
+          <form [formGroup]="searchForm" class="flex flex-col gap-3">
             <div class="flex flex-col md:flex-row gap-4 w-full">
 
               <div class="input-group">
                 <label class="input-label">Codice Fiscale</label>
                 <i class="pi pi-id-card"></i>
-                <input pInputText placeholder="Codice Fiscale..." class="input-field"/>
+                <p-auto-complete formControlName="codiceFiscale"
+                                 placeholder="Codice Fiscale..."
+                                 class="w-full"
+                                 inputStyleClass="input-field"
+                                 [suggestions]="suggestions()"
+                                 (completeMethod)="onSearch($event)" />
               </div>
 
               <div class="input-group">
                 <label class="input-label">Nome</label>
                 <i class="pi pi-user"></i>
-                <input pInputText placeholder="Nome..." class="input-field"/>
+                <input formControlName="nome" pInputText placeholder="Nome..." class="input-field"/>
               </div>
 
               <div class="input-group">
                 <label class="input-label">Cognome</label>
                 <i class="pi pi-user"></i>
-                <input pInputText placeholder="Cognome..." class="input-field"/>
+                <input formControlName="cognome" pInputText placeholder="Cognome..." class="input-field"/>
               </div>
             </div>
 
@@ -39,22 +46,31 @@
               <div class="input-group">
                 <label class="input-label">Data di nascita</label>
                 <i class="pi pi-calendar"></i>
-                <input pInputText placeholder="Data di nascita..." class="input-field"/>
+                <p-date-picker
+                  formControlName="dataNascita"
+                  dateFormat="dd/mm/yy"
+                  placeholder="Seleziona data"
+                  [showIcon]="false"
+                  appendTo="body"
+                  inputStyleClass="input-field" />
               </div>
               <div class="input-group">
                 <label class="input-label">Specializzazione</label>
                 <i class="pi pi-tag"></i>
-                <input pInputText placeholder="Specializzazione..." class="input-field"/>
+                <p-select formControlName="specializzazione" placeholder="Specializzazione..." class="input-field"
+                          [options]="specializzazioni()"
+                          [optionLabel]="'descrizione'"
+                          [optionValue]="'id'"
+                />
               </div>
             </div>
           </form>
 
-          <!-- FOOTER -->
           <div class="flex justify-end gap-3 pt-4 border-t border-gray-50">
-            <button class="px-6 py-3 rounded-md text-sm font-bold text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-all cursor-pointer">
+            <button (click)="reset()" class="btn-secondary">
               Reset
             </button>
-            <button class="px-5 py-3 rounded-md text-sm font-bold bg-primary text-white hover:bg-primary-300 transition-all active:scale-95 shadow-lg shadow-gray-200 cursor-pointer flex items-center gap-2">
+            <button (click)="search()" class="btn-primary">
               <i class="pi pi-search"></i>
               Ricerca
             </button>
@@ -63,20 +79,27 @@
       </p-fieldset>
 
       <!-- AGGIUNGI -->
-      <div class="flex justify-end pt-4 border-t border-gray-50">
-        <button (click)="nuovoMedico()" class="px-5 py-3 rounded-md text-sm font-bold bg-primary text-white hover:bg-primary-300 transition-all active:scale-95 shadow-lg shadow-gray-200 cursor-pointer flex items-center gap-2">
+      <div class="flex justify-end pt-2">
+        <button (click)="nuovoMedico()" class="btn-primary">
           <i class="pi pi-plus"></i>
           Aggiungi
         </button>
       </div>
 
       <!-- TABELLA -->
-      <label class="text-slate-400 uppercase font-bold ml-1 tracking-widest text-[11px]">Risultati</label>
-      <div class="flex-1 h-full min-h-0 flex flex-col border border-slate-200 overflow-hidden">
+      <label class="section-label">Risultati</label>
+      <div class="flex-1 h-full min-h-0 flex flex-col overflow-hidden page-card">
         <p-table
+          [value]="medici()"
+          [lazy]="true"
+          [first]="first()"
+          (onLazyLoad)="onLazyLoadHandler($event)"
           [paginator]="true"
           [scrollable]="true"
           [tableStyleClass]="'h-full'"
+          [totalRecords]="totalRecords()"
+          [loading]="isLoading()"
+          [rows]="5"
           scrollHeight="flex">
           <ng-template pTemplate="header">
             <tr>
@@ -88,17 +111,18 @@
               <th class="text-center">Azioni</th>
             </tr>
           </ng-template>
-          <ng-template #body let-medico>
+          <ng-template pTemplate="body" let-medico>
             <tr>
               <td class="p-2.5 text-sm font-medium text-slate-800">{{ medico.codiceFiscale }}</td>
               <td class="p-2.5 text-sm font-medium text-slate-800">{{ medico.nome }}</td>
               <td class="p-2.5 font-mono text-xs text-slate-500">{{ medico.cognome }}</td>
+              <td class="p-2.5 font-mono text-xs text-slate-500">{{ medico.dataDiNascita }}</td>
               <td class="p-2.5 font-mono text-xs text-slate-500">{{ medico.specializzazione.descrizione }}</td>
               <td class="text-center">
-                <button (click)="modificaMedico(medico.id)" pTooltip="Apri dettaglio" class="p-2 cursor-pointer text-slate-300 hover:text-slate-700 hover:bg-slate-100 rounded transition-colors duration-150">
+                <button (click)="modificaMedico(medico.id)" pTooltip="Apri dettaglio" class="btn-icon">
                   <i class="pi pi-ellipsis-v"></i>
                 </button>
-                <button (click)="eliminaMedico($event, medico.id)" pTooltip="Elimina" class="p-2 cursor-pointer text-slate-300 hover:text-slate-700 hover:bg-slate-100 rounded transition-colors duration-150">
+                <button (click)="eliminaMedico($event, medico.id)" pTooltip="Elimina" class="btn-icon">
                   <i class="pi pi-trash"></i>
                 </button>
               </td>

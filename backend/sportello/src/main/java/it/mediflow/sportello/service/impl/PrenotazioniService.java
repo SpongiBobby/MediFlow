@@ -1,9 +1,11 @@
 package it.mediflow.sportello.service.impl;
 
+import it.mediflow.sportello.entity.Pazienti;
 import it.mediflow.sportello.entity.Prenotazioni;
 import it.mediflow.sportello.enums.StatoPrenotazione;
 import it.mediflow.sportello.exceptions.NotFoundException;
 import it.mediflow.sportello.mappers.IPrenotazioniMapper;
+import it.mediflow.sportello.repository.PazientiRepository;
 import it.mediflow.sportello.repository.PrenotazioniRepository;
 import it.mediflow.sportello.repository.specification.SearchSpecification;
 import it.mediflow.sportello.service.IPrenotazioniService;
@@ -23,6 +25,7 @@ class PrenotazioniService implements IPrenotazioniService {
 
 
     private final PrenotazioniRepository prenotazioniRepository;
+    private final PazientiRepository pazientiRepository;
     private final IPrenotazioniMapper prenotazioniMapper;
 
     @Override
@@ -42,12 +45,17 @@ class PrenotazioniService implements IPrenotazioniService {
 
     @Override
     public PrenotazioniDto salvaPrenotazione(PrenotazioniDto prenotazione) {
-
         Prenotazioni objSaved = prenotazioniMapper.toEntity(prenotazione);
+        if(objSaved.getPaziente().getId() == null) {
+            pazientiRepository.save(objSaved.getPaziente());
+        }
+
+        if(objSaved.getId() == null) {
+            objSaved.setStato(StatoPrenotazione.CONFERMATO);
+        }
         objSaved = prenotazioniRepository.save(objSaved);
 
         return prenotazioniMapper.toDTO(objSaved);
-
     }
 
     @Override
@@ -55,7 +63,10 @@ class PrenotazioniService implements IPrenotazioniService {
         Optional<Prenotazioni> optPrenotazioni = prenotazioniRepository.findById(id);
         Prenotazioni prenotazione = optPrenotazioni.orElseThrow(() -> new NotFoundException("Prenotazione non trovata"));
 
-        prenotazione.setStato(StatoPrenotazione.ANNULLATO);
+        if(prenotazione.getStato() == StatoPrenotazione.ANNULLATO)
+            throw new IllegalArgumentException("Impossibile eliminare una prenotazione annullata");
 
+        prenotazione.setStato(StatoPrenotazione.ANNULLATO);
+        prenotazioniRepository.save(prenotazione);
     }
 }

@@ -1,89 +1,121 @@
 <div class="flex flex-col h-full bg-slate-100">
+  <p-toast/>
   <div class="flex flex-col flex-1 min-h-0 p-6 gap-6">
 
-    <!-- HEADER: altezza fissa -->
     <div class="flex flex-row text-3xl shrink-0">
       <span class="uppercase font-semibold text-primary-500">Anagrafica Medico</span>
     </div>
 
     <div class="flex flex-col h-full rounded-none p-2 shadow-sm border border-gray-200 bg-white">
       <div class="flex-1 w-full">
-        <form [formGroup]="detailForm" class="grid grid-cols-3 gap-5">
-          <!-- NOME -->
-          <div class="input-group">
+        <form [formGroup]="detailForm" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+          <div class="input-group" [class.input-group-invalid]="hasError('nome', 'required')">
             <label class="input-label">Nome</label>
             <i class="pi pi-user"></i>
             <input pInputText formControlName="nome" placeholder="Nome..." class="input-field"/>
+            @if (hasError('nome', 'required')) {
+              <small class="input-error">Il nome è obbligatorio.</small>
+            }
           </div>
 
-          <!-- COGNOME -->
-          <div class="input-group">
+          <div class="input-group" [class.input-group-invalid]="hasError('cognome', 'required')">
             <label class="input-label">Cognome</label>
             <i class="pi pi-user"></i>
             <input pInputText formControlName="cognome" placeholder="Cognome..." class="input-field"/>
+            @if (hasError('cognome', 'required')) {
+              <small class="input-error">Il cognome è obbligatorio.</small>
+            }
           </div>
 
-          <!-- DATA DI NASCITA -->
-          <div class="input-group">
+          <div class="input-group" [class.input-group-invalid]="hasError('dataDiNascita', 'required')">
             <label class="input-label">Data di nascita</label>
             <i class="pi pi-calendar"></i>
-            <input pInputText formControlName="dataDiNascita" placeholder="Data di nascita..." class="input-field"/>
+            <p-date-picker
+              formControlName="dataDiNascita"
+              dateFormat="dd/mm/yy"
+              placeholder="Seleziona data"
+              [showIcon]="false"
+              appendTo="body"
+              inputStyleClass="input-field"></p-date-picker>
+            @if (hasError('dataDiNascita', 'required')) {
+              <small class="input-error">La data di nascita è obbligatoria.</small>
+            }
           </div>
 
-          <!-- LUOGO DI NASCITA -->
-          <div class="input-group">
+          <div class="input-group" [class.input-group-invalid]="hasError('luogoDiNascita', 'required')">
             <label class="input-label">Luogo di nascita</label>
             <i class="pi pi-map-marker"></i>
             <input pInputText formControlName="luogoDiNascita" placeholder="Luogo di nascita..." class="input-field"/>
+            @if (hasError('luogoDiNascita', 'required')) {
+              <small class="input-error">Il luogo di nascita è obbligatorio.</small>
+            }
           </div>
 
-          <!-- CODICE FISCALE -->
-          <div class="input-group">
+          <div class="input-group" [class.input-group-invalid]="hasError('codiceFiscale', 'required')">
             <label class="input-label">Codice Fiscale</label>
             <i class="pi pi-id-card"></i>
             <input pInputText formControlName="codiceFiscale" placeholder="Codice Fiscale..." class="input-field"/>
+            @if (hasError('codiceFiscale', 'required')) {
+              <small class="input-error">Il codice fiscale è obbligatorio.</small>
+            }
           </div>
 
-          <!-- INDIRIZZO DI RESIDENZA -->
-          <div class="input-group">
+          <div class="input-group" [class.input-group-invalid]="hasError('specializzazione', 'required')">
             <label class="input-label">Specializzazione</label>
             <i class="pi pi-sitemap"></i>
-            <input pInputText formControlName="specializzazione" placeholder="Specializzazione..." class="input-field"/>
+            <p-select formControlName="specializzazione" placeholder="Specializzazione..." class="input-field"
+                      [options]="specializzazioni()"
+                      [optionLabel]="'descrizione'"
+                      [optionValue]="'id'" />
+            @if (hasError('specializzazione', 'required')) {
+              <small class="input-error">La specializzazione è obbligatoria.</small>
+            }
           </div>
 
-          <!-- TELEFONO -->
-          <div class="input-group">
-            <label class="input-label">Telefono</label>
+          <div class="input-group" [class.input-group-invalid]="hasError('indirizzoDiResidenza', 'pattern')">
+            <label class="input-label">Luogo Di Residenza</label>
             <i class="pi pi-phone"></i>
-            <input pInputText formControlName="telefono" placeholder="Telefono..." class="input-field"/>
+            <input pInputText formControlName="indirizzoDiResidenza" placeholder="Indirizzo di residenza..." class="input-field"/>
+            @if (hasError('indirizzoDiResidenza', 'pattern')) {
+              <small class="input-error">Il luogo di residenza è obbligatorio.</small>
+            }
           </div>
 
-          <!-- CELLULARE -->
-          <div class="input-group">
+          <div class="input-group" [class.input-group-invalid]="hasError('cellulare', 'required') || hasError('cellulare', 'pattern')">
             <label class="input-label">Cellulare</label>
             <i class="pi pi-mobile"></i>
             <input pInputText formControlName="cellulare" placeholder="Cellulare..." class="input-field"/>
+            @if (hasError('cellulare', 'required')) {
+              <small class="input-error">Il cellulare è obbligatorio.</small>
+            }
+            @if (hasError('cellulare', 'pattern')) {
+              <small class="input-error">Il formato del cellulare non è valido.</small>
+            }
           </div>
 
-          <!-- EMAIL -->
-          <div class="input-group">
+          <div class="input-group" [class.input-group-invalid]="hasError('email', 'required') || hasError('email', 'email')">
             <label class="input-label">Email</label>
-            <i class="pi pi-mars"></i>
+            <i class="pi pi-mail"></i>
             <input pInputText formControlName="email" placeholder="Email..." class="input-field"/>
+            @if (hasError('email', 'required')) {
+              <small class="input-error">L'email è obbligatoria.</small>
+            }
+            @if (hasError('email', 'email')) {
+              <small class="input-error">Inserisci un indirizzo email valido.</small>
+            }
           </div>
 
-          <!-- ANNOTAZIONI -->
-          <div class="col-span-2">
+          <div class="col-span-1 md:col-span-2 xl:col-span-3">
             <div class="input-group">
               <label class="input-label">Annotazioni</label>
-              <textarea class="input-field" formControlName="annotazioni" rows="16" cols="30" pTextarea [autoResize]="false" fluid></textarea>
+              <textarea class="input-field" formControlName="annotazioni" rows="8" cols="30" pTextarea [autoResize]="false" fluid></textarea>
             </div>
           </div>
         </form>
       </div>
-      <!-- PULSANTI -->
+
       <div class="flex justify-end gap-3 pt-4 border-t border-gray-50">
-        <button class="px-5 py-3 rounded-md text-sm font-bold bg-primary text-white hover:bg-primary-300 transition-all active:scale-95 shadow-lg shadow-gray-200 cursor-pointer flex items-center gap-2">
+        <button (click)="salva()" class="px-5 py-3 rounded-md text-sm font-bold bg-primary text-white hover:bg-primary-300 transition-all active:scale-95 shadow-lg shadow-gray-200 cursor-pointer flex items-center gap-2">
           <i class="pi pi-save"></i>
           Salva
         </button>

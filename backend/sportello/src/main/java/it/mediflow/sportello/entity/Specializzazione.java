@@ -26,7 +26,4 @@ public class Specializzazione implements Serializable {
 
     @Column(name = "descrizione", nullable = false)
     private String descrizione;
-
-    @OneToMany(mappedBy = "specializzazione")
-    private Set<Medici> medicis = new LinkedHashSet<>();
 }

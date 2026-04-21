@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import it.mediflow.sportello.annotations.FiscalCode;
 import it.mediflow.sportello.service.IPazientiService;
+import it.mediflow.sportello.web.dto.PageResonse;
 import it.mediflow.sportello.web.dto.PazientiDto;
 import it.mediflow.sportello.web.dto.PazientiFilterDto;
 import jakarta.validation.Valid;
@@ -21,6 +22,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @AllArgsConstructor
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/pazienti")
 class PazientiController {
 
@@ -36,8 +38,9 @@ class PazientiController {
             @ApiResponse(responseCode = "500", description = "Errore interno del server durante l'elaborazione della ricerca")
     })
     @PostMapping(value = "/search", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<PazientiDto>> filtro(Pageable pageable, @RequestBody PazientiFilterDto filter) {
-        return ResponseEntity.ok(pazientiService.ricercaPazienti(filter, pageable));
+    public ResponseEntity<PageResonse<PazientiDto>> filtro(Pageable pageable, @RequestBody PazientiFilterDto filter) {
+        Page<PazientiDto> result = pazientiService.ricercaPazienti(filter, pageable);
+        return ResponseEntity.ok(PageResonse.of(result));
     }
 
 
@@ -67,8 +70,8 @@ class PazientiController {
             @ApiResponse(responseCode = "404", description = "Nessun paziente trovato con il codice fiscale specificato"),
             @ApiResponse(responseCode = "500", description = "Errore interno del server durante l'elaborazione della ricerca")
     })
-    @GetMapping(value = "/cf/{cf}", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<String>> ricercaCF(@PathVariable("cf") @Valid @FiscalCode String cf) {
+    @GetMapping(value = "/search/cf/{cf}", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> ricercaCF(@PathVariable("cf") String cf) {
         return ResponseEntity.ok(pazientiService.ricercaPerCodiceFiscale(cf));
     }
 
@@ -103,6 +106,23 @@ class PazientiController {
     public ResponseEntity<Void> eliminaPaziente(@PathVariable("id") Long id) {
         pazientiService.eliminaPaziente(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(
+            summary = "Ricerca il paziente per codice fiscale",
+            description = "Restituisce il paziente dato il suo codice fiscale"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Ricerca completata con successo"),
+            @ApiResponse(responseCode = "400", description = "Il codice fiscale fornito non è in un formato valido"),
+            @ApiResponse(responseCode = "404", description = "Nessun paziente trovato con il codice fiscale specificato"),
+            @ApiResponse(responseCode = "500", description = "Errore interno del server durante l'elaborazione della ricerca")
+    })
+    @GetMapping(value = "/detail/cf/{cf}")
+    public ResponseEntity<PazientiDto> detailPaziente(@PathVariable("cf")
+                                                          @Valid
+                                                          @FiscalCode String cf) {
+        return ResponseEntity.ok(pazientiService.dettaglioPazientePerCodiceFiscale(cf));
     }
 
 }

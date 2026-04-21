@@ -22,8 +22,13 @@ public class Medici implements Serializable {
     private static final long serialVersionUID = 5130468365222465707L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @SequenceGenerator(
+            name = "medici_seq_gen",
+            sequenceName = "medici_seq",
+            allocationSize = 1
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "medici_seq_gen")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "nome", nullable = false, length = 100)
@@ -57,8 +62,6 @@ public class Medici implements Serializable {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Lob
-    @JdbcTypeCode(SqlTypes.CLOB)
-    @Column(name = "annotazioni")
+    @Column(name = "annotazioni", columnDefinition = "text")
     private String annotazioni;
 }

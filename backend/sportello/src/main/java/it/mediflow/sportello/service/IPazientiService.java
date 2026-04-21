@@ -10,6 +10,7 @@ import java.util.List;
 public interface IPazientiService {
     Page<PazientiDto> ricercaPazienti(PazientiFilterDto filters, Pageable pageable);
     PazientiDto dettaglioPaziente(Long id);
+    PazientiDto dettaglioPazientePerCodiceFiscale(String cf);
     List<String> ricercaPerCodiceFiscale(String cf);
     PazientiDto salvaPaziente(PazientiDto paziente);
     void eliminaPaziente(Long id);

@@ -7,9 +7,7 @@ import it.mediflow.sportello.service.ISpecializzazioneService;
 import it.mediflow.sportello.web.dto.SpecializzazioneDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,6 +15,11 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin(
+        origins = "http://localhost:4200",
+        allowedHeaders = "*",
+        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE}
+)
 @RequestMapping("/specializzazione")
 class SpecializzazioneController {
 

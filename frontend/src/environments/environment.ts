@@ -1,3 +1,6 @@
 export const environment = {
-  apiPrenotazione: 'http://localhost:8080/prenotazioni/',
+  apiPrenotazione: '/sportello/prenotazioni',
+  apiMedici: '/sportello/medici',
+  apiSpecializzazioni: '/sportello/specializzazione',
+  apiPazienti: '/sportello/pazienti'
 };

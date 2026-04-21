@@ -21,7 +21,6 @@
     ]
   },
   "private": true,
-  "packageManager": "npm@11.6.2",
   "dependencies": {
     "@angular/common": "^21.0.0",
     "@angular/compiler": "^21.0.0",
@@ -31,6 +30,7 @@
     "@angular/router": "^21.0.0",
     "@primeuix/themes": "^2.0.2",
     "@tailwindcss/postcss": "^4.1.18",
+    "codice-fiscale-js": "^2.3.23",
     "postcss": "^8.5.6",
     "primeicons": "^7.0.0",
     "primeng": "^21.0.2",

@@ -1,5 +1,6 @@
 package it.mediflow.sportello.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import it.mediflow.sportello.enums.StatoPrenotazione;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ public class PrenotazioniFilterDto {
     private String codiceFiscale;
     private String nome;
     private String cognome;
-    private LocalDate dataDiPrenotazione;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dataPrenotazione;
     private StatoPrenotazione stato;
 }

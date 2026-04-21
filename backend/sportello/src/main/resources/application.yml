@@ -1,16 +1,11 @@
 logging:
   level:
-    org.springframework: debug
-    org.springframework.web: debug
+    org.springframework: info
+    org.springframework.web: info
 
 spring:
   application:
     name: Sportello
-
-  data:
-    web:
-      pageable:
-        serialization-mode: via_dto
 
   datasource:
     url: ${SPORTELLO_URL_DB:jdbc:postgresql://localhost:5432/postgres}

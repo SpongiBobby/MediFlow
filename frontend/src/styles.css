@@ -12,11 +12,11 @@
 @layer theme {
 
   .p-datatable {
-    @apply rounded-none shadow-sm border border-gray-200;
+    @apply rounded-sm shadow-sm border border-gray-200;
   }
 
   .p-datatable .p-datatable-wrapper {
-    @apply rounded-none;
+    @apply rounded-sm;
   }
 
   .p-datatable .p-datatable-thead > tr > th {
@@ -41,7 +41,7 @@
   }
 
   .p-paginator {
-    @apply rounded-none bg-slate-50 border-0 border-t border-slate-200 shadow-none;
+    @apply rounded-sm bg-slate-50 border-0 border-t border-slate-200 shadow-none;
   }
 
   .p-paginator .p-paginator-page,
@@ -49,18 +49,18 @@
   .p-paginator .p-paginator-prev,
   .p-paginator .p-paginator-first,
   .p-paginator .p-paginator-last {
-    @apply rounded-none text-slate-500 hover:bg-slate-100;
+    @apply rounded-sm text-slate-500 hover:bg-slate-100;
   }
 
   .p-paginator .p-paginator-page.p-highlight {
-    @apply bg-slate-200 text-slate-700 rounded-none;
+    @apply bg-slate-200 text-slate-700 rounded-sm;
   }
 
   /******************************************************
                           FIELDSET
   ********************************************************/
   .p-fieldset {
-    @apply rounded-none p-2 shadow-sm border border-gray-200 bg-white
+    @apply rounded-sm p-2 shadow-sm border border-gray-200 bg-white;
   }
 
   .p-fieldset-legend,
@@ -73,7 +73,7 @@
   ********************************************************/
 
   .input-group {
-    @apply relative flex flex-col gap-1.5 flex-1;
+    @apply relative flex flex-col gap-1.5 flex-1 min-w-0;
   }
 
   .input-group .p-select-clear-icon,
@@ -86,7 +86,7 @@
   }
 
   .input-field {
-    @apply w-full bg-gray-50 border-gray-200 text-gray-700 p-3 shadow-sm transition-all;
+    @apply w-full bg-gray-50 border-gray-200 text-gray-700 p-3 shadow-sm transition-all rounded-sm;
   }
 
   .input-field.p-select,
@@ -106,6 +106,18 @@
     @apply pl-11;
   }
 
+  .input-group-invalid .input-field {
+    @apply border-red-400 ring-1 ring-red-400/20 bg-red-50;
+  }
+
+  .input-group-invalid i {
+    @apply text-red-500;
+  }
+
+  .input-error {
+    @apply text-red-500 text-xs font-medium ml-1 leading-4;
+  }
+
   textarea.input-field {
     @apply resize-none;
   }
@@ -116,6 +128,38 @@
 
   .input-group:focus-within i {
     @apply text-gray-900;
+  }
+
+  /******************************************************
+                          BUTTONS
+  ********************************************************/
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-sm bg-primary px-5 py-3 text-sm font-bold text-white shadow-lg shadow-gray-200 transition-all hover:bg-primary-300 active:scale-95 cursor-pointer;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-sm px-5 py-3 text-sm font-bold text-gray-500 transition-all hover:bg-gray-100 hover:text-gray-700 active:scale-95 cursor-pointer;
+  }
+
+  .btn-icon {
+    @apply p-2 cursor-pointer text-slate-300 hover:text-slate-700 hover:bg-slate-100 rounded-sm transition-colors duration-150;
+  }
+
+  /******************************************************
+                          SECTION
+  ********************************************************/
+
+  .page-card {
+    @apply rounded-sm border border-gray-200 bg-white shadow-sm;
+  }
+
+  .page-title {
+    @apply text-3xl font-semibold uppercase text-primary-500;
+  }
+
+  .section-label {
+    @apply ml-1 text-[11px] font-bold uppercase tracking-widest text-slate-400;
   }
 
   /******************************************************

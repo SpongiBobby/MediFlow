@@ -1,7 +1,9 @@
+CREATE SEQUENCE IF NOT EXISTS public.prenotazioni_seq START WITH 1 INCREMENT BY 1;
 CREATE TABLE IF NOT EXISTS PRENOTAZIONI
 (
     ID                     NUMERIC      NOT NULL,
     DATA_PRENOTAZIONE      DATE         DEFAULT NOW() NOT NULL,
+    DATA_VISITA            DATE         NOT NULL,
     STATO                  VARCHAR(100) NOT NULL,
     ID_PAZIENTE            NUMERIC      NOT NULL,
     ID_MEDICO              NUMERIC      NOT NULL,

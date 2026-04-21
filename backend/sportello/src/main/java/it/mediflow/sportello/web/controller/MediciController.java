@@ -7,6 +7,7 @@ import it.mediflow.sportello.annotations.FiscalCode;
 import it.mediflow.sportello.service.IMediciService;
 import it.mediflow.sportello.web.dto.MediciDto;
 import it.mediflow.sportello.web.dto.MediciFilterDto;
+import it.mediflow.sportello.web.dto.PageResonse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,11 +22,15 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin(
+        origins = "http://localhost:4200",
+        allowedHeaders = "*",
+        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE}
+)
 @RequestMapping("/medici")
 class MediciController {
 
     private final IMediciService mediciService;
-
 
     @Operation(
             summary = "Ricerca medici con filtri",
@@ -37,8 +42,9 @@ class MediciController {
             @ApiResponse(responseCode = "500", description = "Errore interno del server durante l'elaborazione della ricerca")
     })
     @PostMapping(value = "/search", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<MediciDto>> filtro(Pageable pageable, @RequestBody MediciFilterDto filter) {
-        return ResponseEntity.ok(mediciService.ricercaMedici(filter, pageable));
+    public ResponseEntity<PageResonse<MediciDto>> filtro(Pageable pageable, @RequestBody MediciFilterDto filter) {
+        Page<MediciDto> result = mediciService.ricercaMedici(filter, pageable);
+        return ResponseEntity.ok(PageResonse.of(result));
     }
 
 
@@ -57,6 +63,20 @@ class MediciController {
         return ResponseEntity.ok(mediciService.dettaglioMedico(id));
     }
 
+    @Operation(
+            summary = "Lista dei medici per Codice Fiscale",
+            description = "Recupera le informazioni  dei medici in base al Codice Fiscale"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Dettaglio recuperato con successo"),
+            @ApiResponse(responseCode = "400", description = "Il codice fiscale fornito non è valido"),
+            @ApiResponse(responseCode = "404", description = "Nessun medico trovato con l'ID specificato"),
+            @ApiResponse(responseCode = "500", description = "Errore interno del server durante il recupero del dettaglio")
+    })
+    @GetMapping(value = "/detail/cf/{cf}", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<MediciDto>> dettaglio(@PathVariable("cf") String cf) {
+        return ResponseEntity.ok(mediciService.dettaglioPerCodiceFiscale(cf));
+    }
 
     @Operation(
             summary = "Ricerca medici per codice fiscale",
@@ -68,8 +88,8 @@ class MediciController {
             @ApiResponse(responseCode = "404", description = "Nessun medico trovato con il codice fiscale specificato"),
             @ApiResponse(responseCode = "500", description = "Errore interno del server durante l'elaborazione della ricerca")
     })
-    @GetMapping(value = "/cf/{cf}", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<String>> ricercaCF(@PathVariable("cf") @Valid @FiscalCode String cf) {
+    @GetMapping(value = "search/cf/{cf}", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> ricercaCF(@PathVariable("cf") String cf) {
         return ResponseEntity.ok(mediciService.ricercaPerCodiceFiscale(cf));
     }
 
@@ -105,8 +125,4 @@ class MediciController {
         mediciService.eliminaMedico(id);
         return ResponseEntity.noContent().build();
     }
-
-
-
-
 }

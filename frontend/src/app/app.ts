@@ -24,7 +24,7 @@ export class App implements OnInit {
           items: [
             {
               label: 'Prenotazioni',
-              icon: PrimeIcons.BOOK,
+              icon: PrimeIcons.CALENDAR,
               routerLink: "/gestione/prenotazioni",
             },
           ]
@@ -34,12 +34,12 @@ export class App implements OnInit {
           items: [
             {
               label: 'Medici',
-              icon: PrimeIcons.USER,
+              icon: PrimeIcons.ID_CARD,
               routerLink: "/anagrafica/medici",
             },
             {
               label: 'Pazienti',
-              icon: PrimeIcons.USER,
+              icon: PrimeIcons.USERS,
               routerLink: "/anagrafica/pazienti",
             },
           ]
