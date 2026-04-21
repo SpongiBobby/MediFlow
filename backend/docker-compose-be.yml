@@ -1,0 +1,20 @@
+services:
+  sportello:
+    build:
+      context: .
+      dockerfile: sportello/Dockerfile
+    restart: on-failure
+    env_file:
+      - environments/.env
+    environment:
+      SPORTELLO_URL_DB: ${SPORTELLO_URL_DB:-jdbc:postgresql://db:5432/postgres}
+      SPORTELLO_DB_USERNAME: ${SPORTELLO_DB_USERNAME:-postgres}
+      SPORTELLO_DB_PASSWORD: ${SPORTELLO_DB_PASSWORD:-postgres}
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - medinet
+
