@@ -36,7 +36,6 @@ import {Select} from 'primeng/select';
     Toast,
     ConfirmPopup,
     AutoComplete,
-    SelectButton,
     Select
   ],
   templateUrl: './prenotazioni.component.html',
